@@ -47,4 +47,9 @@ void initialisePreBootHardware(void)
     IOInit(DEFIO_IO(PE4), OWNER_SYSTEM, RESOURCE_OUTPUT, 0);
     IOConfigGPIO(DEFIO_IO(PE4), IOCFG_OUT_PP);
     IOHi(DEFIO_IO(PE4));
+
+    // FrSky Port Inverter
+    IOInit(DEFIO_IO(PE10), OWNER_SYSTEM, RESOURCE_OUTPUT, 0);
+    IOConfigGPIO(DEFIO_IO(PE10), IOCFG_OUT_PP);
+    IOHi(DEFIO_IO(PE10));
 }
