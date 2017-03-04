@@ -39,7 +39,9 @@ typedef enum UARTDevice {
     UARTDEV_3 = 2,
     UARTDEV_4 = 3,
     UARTDEV_5 = 4,
-    UARTDEV_6 = 5
+    UARTDEV_6 = 5,
+    UARTDEV_7 = 6,
+    UARTDEV_8 = 7
 } UARTDevice;
 
 typedef struct uartDevice_s {
@@ -213,6 +215,52 @@ static uartDevice_t uart6 =
 };
 #endif
 
+#ifdef USE_UART7
+static uartDevice_t uart7 =
+{
+    .DMAChannel = DMA_Channel_5,
+#ifdef USE_UART7_RX_DMA
+    .rxDMAStream = DMA1_Stream3,
+#endif
+    .txDMAStream = DMA1_Stream1,
+    .dev = UART7,
+    .rx = IO_TAG(UART7_RX_PIN),
+    .tx = IO_TAG(UART7_TX_PIN),
+    .af = GPIO_AF_UART7,
+#ifdef UART7_AHB1_PERIPHERALS
+    .rcc_ahb1 = UART7_AHB1_PERIPHERALS,
+#endif
+    .rcc_apb1 = RCC_APB1(UART7),
+    .txIrq = DMA1_ST1_HANDLER,
+    .rxIrq = UART7_IRQn,
+    .txPriority = NVIC_PRIO_SERIALUART7_TXDMA,
+    .rxPriority = NVIC_PRIO_SERIALUART7
+};
+#endif
+
+#ifdef USE_UART8
+static uartDevice_t uart8 =
+{
+    .DMAChannel = DMA_Channel_5,
+#ifdef USE_UART8_RX_DMA
+    .rxDMAStream = DMA1_Stream6,
+#endif
+    .txDMAStream = DMA1_Stream0,
+    .dev = UART8,
+    .rx = IO_TAG(UART8_RX_PIN),
+    .tx = IO_TAG(UART8_TX_PIN),
+    .af = GPIO_AF_UART8,
+#ifdef UART8_AHB1_PERIPHERALS
+    .rcc_ahb1 = UART8_AHB1_PERIPHERALS,
+#endif
+    .rcc_apb1 = RCC_APB1(UART8),
+    .txIrq = DMA1_ST0_HANDLER,
+    .rxIrq = UART8_IRQn,
+    .txPriority = NVIC_PRIO_SERIALUART8_TXDMA,
+    .rxPriority = NVIC_PRIO_SERIALUART8
+};
+#endif
+
 static uartDevice_t* uartHardwareMap[] = {
 #ifdef USE_UART1
     &uart1,
@@ -244,6 +292,16 @@ static uartDevice_t* uartHardwareMap[] = {
 #else
     NULL,
 #endif
+#ifdef USE_UART7
+    &uart7,
+#else
+    NULL,
+#endif
+#ifdef USE_UART8
+    &uart8,
+#else
+    NULL,
+#endif
     };
 
 void uartIrqHandler(uartPort_t *s)
@@ -272,7 +330,7 @@ void uartIrqHandler(uartPort_t *s)
     }
 }
 
-#if defined(USE_UART1_TX_DMA) || defined(USE_UART2_TX_DMA) || defined(USE_UART3_TX_DMA) || defined(USE_UART4_TX_DMA) || defined(USE_UART5_TX_DMA) || defined(USE_UART6_TX_DMA)
+#if defined(USE_UART1_TX_DMA) || defined(USE_UART2_TX_DMA) || defined(USE_UART3_TX_DMA) || defined(USE_UART4_TX_DMA) || defined(USE_UART5_TX_DMA) || defined(USE_UART6_TX_DMA) || defined(USE_UART7_TX_DMA) || defined(USE_UART8_TX_DMA)
 static void handleUsartTxDma(uartPort_t *s)
 {
     DMA_Cmd(s->txDMAStream, DISABLE);
@@ -364,7 +422,7 @@ uartPort_t *serialUART(UARTDevice device, uint32_t baudRate, portMode_t mode, po
         }
     }
 
-#if defined(USE_UART1_TX_DMA) || defined(USE_UART2_TX_DMA) || defined(USE_UART3_TX_DMA) || defined(USE_UART4_TX_DMA) || defined(USE_UART5_TX_DMA) || defined(USE_UART6_TX_DMA)
+#if defined(USE_UART1_TX_DMA) || defined(USE_UART2_TX_DMA) || defined(USE_UART3_TX_DMA) || defined(USE_UART4_TX_DMA) || defined(USE_UART5_TX_DMA) || defined(USE_UART6_TX_DMA) || defined(USE_UART7_TX_DMA) || defined(USE_UART8_TX_DMA)
     // DMA TX Interrupt
     dmaSetHandler(uart->txIrq, dmaIRQHandler, uart->txPriority, (uint32_t)uart);
 #endif
@@ -461,6 +519,34 @@ uartPort_t *serialUART6(uint32_t baudRate, portMode_t mode, portOptions_t option
 void USART6_IRQHandler(void)
 {
     uartPort_t *s = &(uartHardwareMap[UARTDEV_6]->port);
+    uartIrqHandler(s);
+}
+#endif
+
+#ifdef USE_UART7
+uartPort_t *serialUART7(uint32_t baudRate, portMode_t mode, portOptions_t options)
+{
+    return serialUART(UARTDEV_7, baudRate, mode, options);
+}
+
+// UART7 Rx/Tx IRQ Handler
+void UART7_IRQHandler(void)
+{
+    uartPort_t *s = &(uartHardwareMap[UARTDEV_7]->port);
+    uartIrqHandler(s);
+}
+#endif
+
+#ifdef USE_UART8
+uartPort_t *serialUART8(uint32_t baudRate, portMode_t mode, portOptions_t options)
+{
+    return serialUART(UARTDEV_8, baudRate, mode, options);
+}
+
+// UART8 Rx/Tx IRQ Handler
+void UART8_IRQHandler(void)
+{
+    uartPort_t *s = &(uartHardwareMap[UARTDEV_8]->port);
     uartIrqHandler(s);
 }
 #endif
