@@ -105,21 +105,28 @@
 #define UART3_RX_PIN            PD9
 #define UART3_TX_PIN            PD8
 
+#define GPS
 #define USE_UART4               // GPS
 #define UART4_RX_PIN            PA1
 #define UART4_TX_PIN            PA0
 
+#define SERIALRX_PROVIDER       SERIALRX_SBUS
+#define SERIALRX_UART           SERIAL_PORT_USART6
 #define USE_UART6               // SerialRX (SBus)
 #define UART6_RX_PIN            PC7     // RX is used only (SerialRX)
 #define UART6_TX_PIN            PC6
+#define USE_UART6_RX_DMA
 
 //#define USE_UART7
 //#define UART7_RX_PIN            PE7
 //#define UART7_TX_PIN            PE8
 
+#define TELEMETRY
+#define TELEMETRY_SMARTPORT
 #define USE_UART8
 #define UART8_RX_PIN            PE0
 #define UART8_TX_PIN            PE1
+//#define USE_UART8_RX_DMA
 
 #define SERIAL_PORT_COUNT       8 //VCP, UART1, UART2, UART3, UART4
 
@@ -151,12 +158,6 @@
 
 // SDCARD not yet supported
 //#define ENABLE_BLACKBOX_LOGGING_ON_SDCARD_BY_DEFAULT
-
-#define SERIALRX_PROVIDER       SERIALRX_SBUS
-#define SERIALRX_UART           SERIAL_PORT_USART6
-
-#define TELEMETRY
-#define TELEMETRY_SMARTPORT
 
 #define DEFAULT_RX_FEATURE      FEATURE_RX_PPM
 #define DEFAULT_FEATURES        FEATURE_BLACKBOX
