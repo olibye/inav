@@ -115,18 +115,18 @@
 #define USE_UART6               // SerialRX (SBus)
 #define UART6_RX_PIN            PC7     // RX is used only (SerialRX)
 #define UART6_TX_PIN            PC6
-#define USE_UART6_RX_DMA
+//#define USE_UART6_RX_DMA // SERIALRX not working with DMA
 
-//#define USE_UART7
-//#define UART7_RX_PIN            PE7
-//#define UART7_TX_PIN            PE8
+#define USE_UART7
+#define UART7_RX_PIN            PE7
+#define UART7_TX_PIN            PE8
 
 #define TELEMETRY
 #define TELEMETRY_SMARTPORT
 #define USE_UART8
 #define UART8_RX_PIN            PE0
 #define UART8_TX_PIN            PE1
-//#define USE_UART8_RX_DMA
+#define USE_UART8_RX_DMA
 
 #define SERIAL_PORT_COUNT       8 //VCP, UART1, UART2, UART3, UART4
 
